@@ -8,6 +8,7 @@
 ?>
 @extends('layouts.master')
 @section('content')
+    @include('templates.message-block')
     <seciton class="row new-post">
         <div class="col-md-6 col-md-offset-3">
             <header><h3>What do you have to say?</h3></header>
@@ -23,30 +24,42 @@
     <section class="row posts">
         <div class="com-md-6 col-md-offset-3">
             <header><h3>What other people say ...</h3></header>
-            <article class="post">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
-                <div class="info">
-                    Posted by Max on 12 Feb 2016
-                </div>
-                <div class="inteaction">
-                    <a href="#">Like</a>
-                    <a href="#">Dislike</a>
-                    <a href="#">Edit</a>
-                    <a href="#">Delete</a>
-                </div>
-            </article>
-            <article class="post">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
-                <div class="info">
-                    Posted by Max on 12 Feb 2016
-                </div>
-                <div class="inteaction">
-                    <a href="#">Like</a>
-                    <a href="#">Dislike</a>
-                    <a href="#">Edit</a>
-                    <a href="#">Delete</a>
-                </div>
-            </article>
+            @foreach($posts as $post)
+                <article class="post">
+                    <p> {{$post->body}} </p>
+                    <div class="info">
+                        Posted by {{$post->user->name}} at {{$post->created_at}}
+                    </div>
+                    <div class="inteaction">
+                        <a href="#">Like</a>
+                        <a href="#">Dislike</a>
+                        <a href="#" class="edit">Edit</a>
+                        <a href="{{route('post.delete',['post_id'=>$post->id])}}">Delete</a>
+                    </div>
+                </article>
+            @endforeach
         </div>
     </section>
+    <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Edit Post</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="post-body">Edit the post</label>
+                            <textarea class="form-control" name="post-body" id="post-body" cols="30" rows="5"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection

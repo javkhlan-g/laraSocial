@@ -26,13 +26,26 @@ Route::post('/signin', [
     'as' => 'signin'
 ]);
 
+Route::get('/logout', [
+    'uses' => 'UserController@getLogout',
+    'as' => 'logout',
+]);
+
 Route::get('/dashboard', [
-    'uses' => 'UserController@getDashboard',
+    'uses' => 'PostController@getDashboard',
     'as' => 'dashboard',
     'middleware' => 'auth'
 ]);
 
 Route::post('/createpost', [
     'uses' => 'PostController@postCreatePost',
-    'as' => 'post.create'
-    ]);
+    'as' => 'post.create',
+    'middleware' => 'auth'
+]);
+
+Route::get('/post-delete/{post_id}', [
+    'uses' => 'PostController@getDeletePost',
+    'as'=>'post.delete',
+    'middleware' => 'auth'
+]);
+
