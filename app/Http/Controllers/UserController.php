@@ -21,7 +21,7 @@ class UserController extends Controller
         $this->validate($request, [
             'email' => 'required|email|unique:users',
             'name' => 'required|max:120',
-            'password' => 'required|min:4',
+            'password' => 'required|min:3',
         ]);
 
         $user = new User();
@@ -36,14 +36,15 @@ class UserController extends Controller
     public function postSignIn(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
+
 
         if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
             return redirect()->route('dashboard');
         }
-        return redirect()->back();
+        return redirect()->back()->with(['message' => 'Invalid username or password']);
     }
 
     public function getLogout()

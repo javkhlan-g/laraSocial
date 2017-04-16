@@ -16,6 +16,7 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->text('body');
+            $table->string('excel',200);
             $table->integer('user_id');
 
         });

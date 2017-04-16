@@ -11,6 +11,8 @@ namespace Social\Http\Controllers;
 use Illuminate\Http\Request;
 use Social\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+
+
 use Social\Post;
 
 class PostController extends Controller
@@ -29,6 +31,17 @@ class PostController extends Controller
 
         $post = new Post();
         $post->body = $request['body'];
+
+        $file = $request->file('excel');
+
+
+        $fileName = $file->getClientOriginalName();
+
+        $request->file('excel')->move(
+            base_path() . '/public/uploads', $fileName
+        );
+
+        $post->file = $fileName;
         $message = 'There was an error';
         if ($request->user()->posts()->save($post)) {
             $message = 'Poas successfully created';
@@ -45,5 +58,23 @@ class PostController extends Controller
         }
         $post->delete();
         return redirect()->route('dashboard')->with(['message' => 'Successfully deleted']);
+    }
+
+    public function postEditPost(Request $request)
+    {
+        $this->validate($request, [
+            'body' => 'required'
+        ]);
+
+        $post = Post::find($request['postId']);
+
+        if (Auth::user() != $post->user) {
+            return redirect()->back();
+        }
+
+        $post->body = $request['body'];
+        $post->update();
+        return response()->json(['new_body' => $post->body], 200);
+
     }
 }
